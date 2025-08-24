@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLO11 Object Detection Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4a6cf7;
+            --primary-dark: #3451b2;
+            --secondary: #10b981;
+            --accent: #8b5cf6;
+            --dark: #1a1d2b;
+            --darker: #11141f;
+            --light: #f0f2f5;
+            --lighter: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            font-family: 'Inter', sans-serif;
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: rgba(26, 29, 43, 0.8);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--card-border);
+            padding: 20px 0;
+            height: 100vh;
+            position: fixed;
+            width: 250px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-item {
+            margin: 8px 0;
+            padding: 0 15px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            color: var(--light);
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: var(--transition);
+            opacity: 0.8;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(74, 108, 247, 0.15);
+            opacity: 1;
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            grid-column: 2;
+            padding: 30px;
+            padding-left: 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .page-title h1 {
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-title p {
+            opacity: 0.7;
+            font-size: 0.95rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-bell {
+            position: relative;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+
+        .notification-bell i {
+            font-size: 1.3rem;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .notification-bell:hover i {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: 600;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        /* Detection Cards */
+        .detection-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .detection-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .detection-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            background: linear-gradient(90deg, rgba(74, 108, 247, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+            padding: 18px 25px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header i {
+            margin-right: 12px;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-header h3 {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 15px rgba(74, 108, 247, 0.4);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary i {
+            margin-right: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 108, 247, 0.6);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-danger i {
+            margin-right: 8px;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.6);
+        }
+
+        /* Webcam and Results */
+        #webcam {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--card-border);
+        }
+
+        #result img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--card-border);
+        }
+
+        /* File Input */
+        .custom-file {
+            margin-bottom: 20px;
+        }
+
+        .custom-file-label {
+            background: rgba(26, 29, 43, 0.5);
+            border: 1px solid var(--card-border);
+            color: var(--light);
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+
+        .custom-file-label::after {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border: none;
+            border-radius: 0 6px 6px 0;
+            padding: 12px 15px;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(74, 108, 247, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(74, 108, 247, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(74, 108, 247, 0);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translate(0, 0px); }
+            50% { transform: translate(0, -8px); }
+            100% { transform: translate(0, 0px); }
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            border-top: 1px solid var(--card-border);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                grid-column: 1;
+                padding: 20px;
+            }
+            
+            .detection-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <a href="#" class="logo">
+                    <i class="fas fa-brain"></i>YOLO11
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-item">
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-camera"></i>
+                        <span>Real-Time Detection</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-image"></i>
+                        <span>Image Detection</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-video"></i>
+                        <span>Video Analysis</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Analytics</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="page-title">
+                    <h1>Real-Time Object Detection Dashboard</h1>
+                    <p>Monitor and analyze object detection in real-time with YOLO11</p>
+                </div>
+                
+                <div class="user-menu">
+                    <div class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    
+                    <div class="user-profile">
+                        <div class="avatar">JD</div>
+                        <div class="user-info">
+                            <div class="user-role">Admin</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-icon" style="background: rgba(74, 108, 247, 0.15);">
+                        <i class="fas fa-bolt" style="color: var(--primary);"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value">124 ms</div>
+                        <div class="stat-label">Avg. Processing Time</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15);">
+                        <i class="fas fa-chart-line" style="color: var(--secondary);"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value">98.7%</div>
+                        <div class="stat-label">Accuracy Rate</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-icon" style="background: rgba(139, 92, 246, 0.15);">
+                        <i class="fas fa-object-group" style="color: var(--accent);"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value">2,847</div>
+                        <div class="stat-label">Objects Detected Today</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stat-icon" style="background: rgba(239, 68, 68, 0.15);">
+                        <i class="fas fa-server" style="color: #ef4444;"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value">42%</div>
+                        <div class="stat-label">System Load</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detection Cards -->
+            <div class="detection-cards">
+                <!-- Webcam Detection -->
+                <div class="detection-card" data-aos="fade-right">
+                    <div class="card-header">
+                        <i class="fas fa-camera"></i>
+                        <h3>Real-Time Webcam Detection</h3>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-primary btn-block pulse" onclick="startWebcam()">
+                            <i class="fas fa-play-circle"></i>Start Webcam Feed
+                        </button>
+                        <div id="webcam-container" style="display:none;" class="mt-4">
+                            <img id="webcam" class="floating" /> <br>
+                            <button class="btn btn-danger btn-block mt-3" onclick="stopWebcam()">
+                                <i class="fas fa-stop-circle"></i>Stop Webcam Feed
+                            </button>
+                        </div>
+                        <p class="mt-3 text-center" style="opacity: 0.7;">
+                            Real-time object detection using your webcam
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Image Detection -->
+                <div class="detection-card" data-aos="fade-left">
+                    <div class="card-header">
+                        <i class="fas fa-image"></i>
+                        <h3>Image Detection</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/detect_image" method="post" enctype="multipart/form-data">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="image" name="image" accept="image/*" required>
+                                <label class="custom-file-label" for="image">Choose image file</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-search"></i>Detect Objects in Image
+                            </button>
+                        </form>
+                        <p class="mt-3 text-center" style="opacity: 0.7;">
+                            Upload an image to detect objects (JPG, PNG, WebP)
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Results Display -->
+                <div class="detection-card" data-aos="fade-up">
+                    <div class="card-header">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Detection Results</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="result">
+                            {% if detected_image %}
+                            <img src="data:image/jpeg;base64,{{ detected_image }}" alt="Detected Image">
+                            {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-image" style="font-size: 3rem; opacity: 0.3;"></i>
+                                <p class="mt-3" style="opacity: 0.5;">Detection results will appear here</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Detection -->
+                <div class="detection-card" data-aos="fade-up">
+                    <div class="card-header">
+                        <i class="fas fa-video"></i>
+                        <h3>Video Analysis</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/detect_video" method="post" enctype="multipart/form-data">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="video" name="video" accept="video/*" required>
+                                <label class="custom-file-label" for="video">Choose video file</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-search"></i>Analyze Video
+                            </button>
+                        </form>
+                        <p class="mt-3 text-center" style="opacity: 0.7;">
+                            Upload a video for object detection (MP4, MOV, AVI)
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <strong>YOLO11 Object Detection System</strong> • Team No: 18 •</div>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        // Initialize animations
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        function startWebcam() {
+            const webcamContainer = document.getElementById('webcam-container');
+            webcamContainer.style.display = 'block';
+    
+            const webcam = document.getElementById('webcam');
+            webcam.src = '/video_feed';  // This points to the video feed route in Flask
+            
+            // Add animation to webcam
+            webcam.classList.add('floating');
+        }
+    
+        function stopWebcam() {
+            const webcamContainer = document.getElementById('webcam-container');
+            webcamContainer.style.display = 'none'; 
+    
+            const webcam = document.getElementById('webcam');
+            webcam.src = '';  // Stop the webcam feed
+            
+            // Remove animation
+            webcam.classList.remove('floating');
+        }
+    
+        // For showing file names in the custom file input fields
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+
+        // Simulate real-time stats updates
+        function updateStats() {
+            const stats = document.querySelectorAll('.stat-value');
+            stats.forEach(stat => {
+                const currentValue = parseFloat(stat.textContent);
+                if (!isNaN(currentValue)) {
+                    const variation = (Math.random() - 0.5) * 10;
+                    const newValue = Math.max(0, currentValue + variation);
+                    
+                    if (stat.textContent.includes('ms')) {
+                        stat.textContent = newValue.toFixed(0) + ' ms';
+                    } else if (stat.textContent.includes('%')) {
+                        stat.textContent = Math.min(100, newValue).toFixed(1) + '%';
+                    } else {
+                        stat.textContent = Math.round(newValue).toLocaleString();
+                    }
+                }
+            });
+        }
+
+        // Update stats every 5 seconds
+        setInterval(updateStats, 5000);
+    </script>
+</body>
+
+</html>
