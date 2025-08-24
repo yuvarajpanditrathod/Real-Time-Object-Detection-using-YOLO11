@@ -43,7 +43,7 @@ A modern, professional web application for real-time object detection using YOLO
 ## Installation
 
 ### Prerequisites
-- Python 3.8 or higher
+- Python 3.10 or higher
 - Webcam (for live detection)
 - At least 4GB RAM recommended
 
@@ -53,7 +53,12 @@ A modern, professional web application for real-time object detection using YOLO
 3. Open your browser to `http://localhost:5000`
 
 ### Manual Installation
-1. Create a virtual environment:
+1. Clone Repository:
+   ```bash
+   git clone https://github.com/yuvarajpanditrathod/Real-Time-Object-Detection-using-YOLO11.git
+   cd Real-Time-Object-Detection-using-YOLO11
+   ```
+3. Create a virtual environment:
    ```bash
    python -m venv .venv
    ```
@@ -189,29 +194,6 @@ Models are automatically downloaded on first run.
 - Check browser console for JavaScript errors
 - Verify all dependencies are installed: `pip list`
 
-## Production Deployment
-
-For production deployment:
-
-1. Set environment variables:
-   ```bash
-   set FLASK_ENV=production  # Windows
-   export FLASK_ENV=production  # Linux/Mac
-   ```
-
-2. Use a production WSGI server like Gunicorn:
-   ```bash
-   pip install gunicorn
-   gunicorn -w 4 -b 0.0.0.0:5000 Yolo11-Object-Detection:app
-   ```
-
-3. Additional considerations:
-   - Configure reverse proxy (nginx/Apache)
-   - Set up SSL certificates
-   - Configure firewall rules
-   - Implement file size limits
-   - Add proper logging and monitoring
-
 ## Sample Files
 
 The project includes sample test files in the `uploads/` directory:
@@ -248,11 +230,6 @@ This project is for educational purposes. YOLO models are subject to their respe
 **Made with ❤️ by Yuvaraj**
 
 *This project was developed as a demonstration of modern web technologies combined with cutting-edge AI for object detection. Feel free to contribute and make it even better!*
-
-### Connect with me:
-- 🚀 Passionate about AI and Web Development
-- 💡 Always learning and building cool projects
-- 🌟 Open to collaboration and new opportunities
-
 *"Building the future, one line of code at a time!"* - Yuvaraj
 #
+
