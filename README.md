@@ -202,9 +202,9 @@ The project includes sample test files in the `uploads/` directory:
 
 These files can be used to test the detection functionality without uploading your own content.
 
-## License
+## 📄 License
 
-This project is for educational purposes. YOLO models are subject to their respective licenses.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
@@ -227,10 +227,12 @@ This project is for educational purposes. YOLO models are subject to their respe
 
 ## 👨‍💻 Developer
 
-**Made with ❤️ by Yuvaraj**
+**Made with ❤️ by [Yuvaraj](mailto:yuvarajpanditrathod@gmail.com)**
+
 
 *This project was developed as a demonstration of modern web technologies combined with cutting-edge AI for object detection. Feel free to contribute and make it even better!*
 *"Building the future, one line of code at a time!"* - Yuvaraj
 #
+
 
 
