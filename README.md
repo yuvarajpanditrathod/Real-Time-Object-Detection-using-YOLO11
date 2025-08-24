@@ -205,8 +205,11 @@ Models are automatically downloaded on first run.
 - Check browser console for JavaScript errors
 - Verify all dependencies are installed: `pip list`
 
-## Sample Files
+## 📑 Reports  
+A detailed report is available here: [Report.pdf](./Report.pdf)  
+It covers dataset details, model training, performance metrics, and real-time detection results.  
 
+## Sample Files
 The project includes sample test files in the `uploads/` directory:
 - **Images**: cars.jpg, cat.jpg, plants.jpg, vegitables.jpg, etc.
 - **Videos**: demo.mp4, test_video.mp4, car.mp4, etc.
@@ -244,6 +247,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 *This project was developed as a demonstration of modern web technologies combined with cutting-edge AI for object detection. Feel free to contribute and make it even better!*
 *"Building the future, one line of code at a time!"* - Yuvaraj
 #
+
 
 
 
