@@ -1,5 +1,16 @@
 # 🖼️🎯 Real-Time Object Detection System using YOLO11  
-![Python](https://img.shields.io/badge/Python-3.8%2B-green?logo=python&logoColor=white) ![YOLO](https://img.shields.io/badge/YOLO-v11-red?logo=github&logoColor=white) ![OpenCV](https://img.shields.io/badge/OpenCV-Enabled-blue?logo=opencv&logoColor=white) ![Status](https://img.shields.io/badge/Status-Active-success)
+![Python](https://img.shields.io/badge/Python-3.8%2B-green?logo=python&logoColor=white) 
+![YOLO](https://img.shields.io/badge/YOLO-v11-red?logo=github&logoColor=white) 
+![OpenCV](https://img.shields.io/badge/OpenCV-Enabled-blue?logo=opencv&logoColor=white) 
+![Ultralytics](https://img.shields.io/badge/Ultralytics-YOLO-brightgreen?logo=github&logoColor=white) 
+![PyTorch](https://img.shields.io/badge/PyTorch-Enabled-orange?logo=pytorch&logoColor=white) 
+![TensorFlow](https://img.shields.io/badge/TensorFlow-Supported-ff6f00?logo=tensorflow&logoColor=white) 
+![Flask](https://img.shields.io/badge/Flask-WebApp-black?logo=flask&logoColor=white) 
+![Bootstrap](https://img.shields.io/badge/Bootstrap-UI-purple?logo=bootstrap&logoColor=white) 
+![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-f37626?logo=jupyter&logoColor=white) 
+![Status](https://img.shields.io/badge/Status-Active-success)
+
+
 
 
 A modern, professional web application for real-time object detection using YOLO11 models built with **Flask** backend and **Bootstrap** frontend. This system provides live webcam detection, image analysis, and video processing capabilities with a sleek, responsive web interface.
@@ -235,6 +246,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 *This project was developed as a demonstration of modern web technologies combined with cutting-edge AI for object detection. Feel free to contribute and make it even better!*
 *"Building the future, one line of code at a time!"* - Yuvaraj
 #
+
 
 
 
